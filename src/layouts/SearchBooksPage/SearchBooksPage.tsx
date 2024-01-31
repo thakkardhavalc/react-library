@@ -185,8 +185,8 @@ export const SearchBooksPage = () => {
                             <h3>
                                 Can't find what you are looking for?
                             </h3>
-                            <a type="button" className="btn main-color btn-md px-4 me-md-2 fw-bold text-white" href="#">
-                                LibraryServices
+                            <a type="button" className="btn btn-primary btn-md px-4 me-md-2 fw-bold text-white" href="#">
+                                Library Services
                             </a>
                         </div>
                     }
