@@ -3,7 +3,8 @@ import { Navbar } from './layouts/NavbarAndFooter/Navbar';
 import { Footer } from './layouts/NavbarAndFooter/Footer';
 import { SearchBooksPage } from './layouts/SearchBooksPage/SearchBooksPage';
 import { HomePage } from './layouts/HomePage/HomePage';
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { BookCheckoutPage } from './layouts/BookCheckoutPage/BookCheckoutPage';
 
 export const App = () => {
 
@@ -15,6 +16,7 @@ export const App = () => {
           <Route path='/' element={<HomePage />} />
           <Route path='/home' element={<HomePage />} />
           <Route path='/search' element={<SearchBooksPage />} />
+          <Route path='/checkout/:bookId' element={<BookCheckoutPage />} />
           <Route path='/*' element={<Navigate to="/" replace />} />
         </Routes>
       </div>
