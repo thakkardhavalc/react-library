@@ -3,10 +3,11 @@ import BookModel from "../../models/BookModel";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { StarsReview } from "../Utils/StarsReview";
 import { CheckoutAndReviewBox } from "./CheckoutAndReviewBox";
-import ReviewModel from "../../models/ReviewModel";
+import ReviewModel from '../../models/ReviewModel';
 import { LatestReviews } from "./LatestReviews";
 import { useOktaAuth } from "@okta/okta-react";
 import React from "react";
+import ReviewRequestModel from '../../models/ReviewRequestModel';
 
 export const BookCheckoutPage = () => {
 
@@ -211,6 +212,7 @@ export const BookCheckoutPage = () => {
         )
     }
 
+    // Checkout Book funcrtion
     async function checkoutBook() {
         const url = `http://localhost:8080/api/books/secure/checkout?bookId=${book?.id}`;
 
@@ -227,6 +229,31 @@ export const BookCheckoutPage = () => {
             throw new Error('Something went wrong!');
         }
         setIsBookCheckedOut(true);
+    }
+
+    // submit review funcrtion
+    async function submitReview(starInput: number, reviewDescription: string) {
+        let bookId: number = 0;
+        if (book?.id) {
+            bookId = book.id;
+        }
+
+        const reviewRequestModel = new ReviewRequestModel(starInput, bookId, reviewDescription);
+        const url = `http://localhost:8080/api/reviews/secure`;
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(reviewRequestModel)
+        };
+
+        const returnResponse = await fetch(url, requestOptions);
+        if (!returnResponse.ok) {
+            throw new Error('Something went wrong!');
+        }
+        setIsReviewLeft(true);
     }
 
     return (
@@ -251,6 +278,7 @@ export const BookCheckoutPage = () => {
                     </div>
                     <CheckoutAndReviewBox book={book} mobile={false} currentLoansCount={currentLoansCount} 
                         isAuthenticated={authState?.isAuthenticated} isCheckedOut={isBookCheckedOut} checkoutBook={checkoutBook}
+                        isReviewLeft={isReviewLeft} submitReview={submitReview}
                     />
                 </div>
                 <hr />
@@ -263,7 +291,7 @@ export const BookCheckoutPage = () => {
                         :
                         <img src={require('./../../Images/BooksImages/book-luv2code-1000.png')} width='226'
                             height='349' alt='Book' />
-                    }
+                    }``
                 </div>
                 <div className='mt-4'>
                     <div className='ml-2'>
@@ -275,6 +303,7 @@ export const BookCheckoutPage = () => {
                 </div>
                 <CheckoutAndReviewBox book={book} mobile={true} currentLoansCount={currentLoansCount} 
                     isAuthenticated={authState?.isAuthenticated} isCheckedOut={isBookCheckedOut} checkoutBook={checkoutBook}
+                    isReviewLeft={isReviewLeft} submitReview={submitReview}
                 />
                 <hr />
                 <LatestReviews reviews={reviews} bookId={book?.id} mobile={true} />
